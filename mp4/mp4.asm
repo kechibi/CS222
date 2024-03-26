@@ -1,87 +1,45 @@
 section .data
     newline db 10
 
+section .bss
+    buffer resb 1
+    
+
 section .text
     global _start
 
-    print_char:
-        mov eax, 4
-        mov ebx, 1
-        mov ecx, esp
-        mov edx, 1
-        int 0x80
-        ret
+_start:
+    
+    mov eax, 3           
+    mov ebx, 0           
+    mov ecx, buffer      
+    mov edx, 1          
+    int 0x80             
 
-    _start:
-        cmp al, 'A'
-        jl not_uppercase
-        cmp al, 'Z'
-        jg not_uppercase
-        add al, 32
+    
+    cmp byte [buffer], 'A'
+    jl not_uppercase
+    cmp byte [buffer], 'Z'
+    jg not_uppercase
 
-    not_uppercase:
-        push eax
-        call print_char
-        mov eax, 4
-        mov ebx, 1
-        mov ecx, newline
-        mov edx, 1
-        int 0x80
+    
+    add byte [buffer], 32     ; Convert the character to uppercase
 
-        mov eax, 4
-        mov ebx, 1
-        mov ecx, msg1
-        mov edx, 1
-        int 0x80
+not_uppercase:
+    
+    mov eax, 4           
+    mov ebx, 1          
+    mov ecx, buffer      
+    mov edx, 1           
+    int 0x80  
 
-        mov eax, 4
-        mov ebx, 1
-        mov ecx, newline
-        mov edx, 1
-        int 0x80
+    mov eax, 4           
+    mov ebx, 1          
+    mov ecx, newline     
+    mov edx, 1           
+    int 0x80                   
 
-        mov eax, 4
-        mov ebx, 1
-        mov ecx, msg2
-        mov edx, 1
-        int 0x80
-
-        mov eax, 4
-        mov ebx, 1
-        mov ecx, newline
-        mov edx, 1
-        int 0x80
-
-        mov eax, 4
-        mov ebx, 1
-        mov ecx, msg3
-        mov edx, 1
-        int 0x80
-
-        mov eax, 4
-        mov ebx, 1
-        mov ecx, newline
-        mov edx, 1
-        int 0x80
-
-        mov eax, 4
-        mov ebx, 1
-        mov ecx, msg4
-        mov edx, 1
-        int 0x80
-
-        mov eax, 4
-        mov ebx, 1
-        mov ecx, newline
-        mov edx, 1
-        int 0x80
-
-        mov eax, 1
-        xor ebx, ebx
-        int 0x80
-
-    section .data
-        msg1 db 'A'
-        msg2 db 'a'
-        msg3 db 'Z'
-        msg4 db 'z'
+    ; Exit the program
+    mov eax, 1           
+    xor ebx, ebx         ; exit code 0
+    int 0x80
